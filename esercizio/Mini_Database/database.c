@@ -150,7 +150,16 @@ void insert(Database * database, struct Persona * persona){
 }
 struct Persona* findByName(Database * database, char * name){
 
-    
+    if (database == NULL || name == NULL) return;
+
+    IndexNodeString *nameIndex = database->name;
+    while(nameIndex != NULL){
+        int comparison = strcmp(name, nameIndex->value);
+        if (comparison == 0){
+            //!comparison   
+            return (struct Persona*) nameIndex->value
+        }
+    }
 
 }
 struct Persona* findBySurname(Database * database, char * surname){
