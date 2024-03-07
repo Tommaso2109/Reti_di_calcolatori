@@ -1,74 +1,6 @@
 
-//! parte da rimuovere
-
 #include <stdlib.h>
 #include <stdio.h>
-
-typedef struct Node {
-    int value;
-    struct Node * left;
-    struct Node * right;
-} Node;
-
-Node* create_tree(int root_value) {
-    Node *root = malloc(sizeof(Node));
-    if (root == NULL) {
-        return NULL;
-    } 
-    root->value = root_value;
-    root->left = NULL;
-    root->right = NULL;
-    return root;
-}
-
-void free_tree(Node* root) {
-    free(root);
-}
-
-void insert_inorder(Node *root, int value) {
-    if (root == NULL) {
-        return;
-    }
-    if (value <= root->value) {
-        if (root->left == NULL) {
-            Node *node = create_tree(value);
-            root->left = node;
-            return;
-        }
-        insert_inorder(root->left, value);
-        return;
-    }
-    if (root->right == NULL) {
-        Node *node = create_tree(value);
-        root->right = node;
-        return;
-    }
-    insert_inorder(root->right, value);
-}
-
-void print_tree(Node * root) {
-    if (root == NULL) {
-        return;
-    }
-    print_tree(root->left);
-    printf("%d\n", root->value);
-    print_tree(root->right);
-}
-
-int main(int argc, const char * argv[]) {
-    Node *root = create_tree(12);
-
-    insert_inorder(root, 34);
-    insert_inorder(root, 1);
-    insert_inorder(root, -5);
-    
-    print_tree(root);
-
-    free_tree(root); 
-}
-
-//! ############################################################################### !//
-
 
 // This represent a record in the only schema of this database
 struct Persona {
@@ -103,18 +35,130 @@ typedef struct {
 // TODO implement the following methods
 // The method return a Persona or NULL 
 
-void insert(Database * database, Persona * persona){
+IndexNodeString *create_inddexNodeString ( char* root_value){
+    IndexNodeString *node = malloc(sizeof(IndexNodeString));
+    if (node == NULL) {
+        return NULL;
+    } 
+    node->value = root_value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+IndexNodeInt *create_inddexNodeInt ( int root_value){
+    IndexNodeInt *node = malloc(sizeof(IndexNodeInt));
+    if (node == NULL) {
+        return NULL;
+    } 
+    node->value = root_value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+void insertname ( IndexNodeString* node, struct Persona * persona){
+    if (persona->name <= node->value) {
+        if(node->right == NULL){
+           IndexNodeString* node = create_inddexNodeString(persona->name);
+           node->right = node;
+           insertname(node->right, persona);
+           return;
+        }
+        
+    }
+
+    if(node->left == NULL){
+        IndexNodeString* node = create_inddexNodeString(persona->name);
+        node->left = node;
+        insertname(node->left, persona);
+        return;
+    }
+}
+
+void insertsurname ( IndexNodeString* node, struct Persona * persona){
+    if (persona->surname <= node->value) {
+        if(node->right == NULL){
+           IndexNodeString* node = create_inddexNodeString(persona->surname);
+           node->right = node;
+           insertname(node->right, persona);
+           return;
+        }
+    }
     
+    if(node->left == NULL){
+        IndexNodeString* node = create_inddexNodeString(persona->surname);
+        node->left = node;
+        insertsurname(node->left, persona);
+        return;
+    }
 }
-Persona* findByName(Database * database, char * name){
+
+void insertaddress ( IndexNodeString* node, struct Persona * persona){
+    if (persona->address <= node->value) {
+        if(node->right == NULL){
+           IndexNodeString* node = create_inddexNodeString(persona->address);
+           node->right = node;
+           insertname(node->right, persona);
+           return;
+        }
+    }
+    
+    if(node->left == NULL){
+        IndexNodeString* node = create_inddexNodeString(persona->address);
+        node->left = node;
+        insertaddress(node->left, persona);
+        return;
+    }
+}
+
+void insertage ( IndexNodeInt* node, struct Persona * persona){
+    if (persona->age <= node->value) {
+        if(node->right == NULL){
+           IndexNodeInt* node = create_inddexNodeInt(persona->age);
+           node->right = node;
+           insertage(node->right, persona);
+           return;
+        }
+    }
+    
+    if(node->left == NULL){
+        IndexNodeInt* node = create_inddexNodeInt(persona->age);
+        node->left = node;
+        insertage(node->left, persona);
+        return;
+    }
+}
+
+
+void insert(Database * database, struct Persona * persona){
+    if (database == NULL) return;
+
+    //? insert name
+    insertname(database->name, persona);
+
+    //? insert surname
+    insertsurname(database->surname, persona);
+
+    //? insert adress
+    insertaddress(database->address, persona);
+
+    //? insert age
+    insertage(database->age, persona);
+
 
 }
-Persona* findBySurname(Database * database, char * surname){
+struct Persona* findByName(Database * database, char * name){
+
+    
 
 }
-Persona* findByAddress(Database * database, char * address){
+struct Persona* findBySurname(Database * database, char * surname){
 
 }
-Persona* findByAge(Database * database, int age){
+struct Persona* findByAddress(Database * database, char * address){
+
+}
+struct Persona* findByAge(Database * database, int age){
     
 }
