@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // This represent a record in the only schema of this database
 struct Persona {
@@ -146,28 +147,93 @@ void insert(Database * database, struct Persona * persona){
     //? insert age
     insertage(database->age, persona);
 
-
 }
+
+
 struct Persona* findByName(Database * database, char * name){
 
-    if (database == NULL || name == NULL) return;
+    if (database == NULL || name == NULL) return NULL;
 
     IndexNodeString *nameIndex = database->name;
     while(nameIndex != NULL){
         int comparison = strcmp(name, nameIndex->value);
         if (comparison == 0){
-            //!comparison   
-            return (struct Persona*) nameIndex->value
+            //?comparison   
+            return (struct Persona*) nameIndex;
+        }
+        else if(comparison<0){
+            nameIndex = nameIndex->left;
+        }
+        else{
+            nameIndex = nameIndex->right;
         }
     }
+    //? persona not found
+    return NULL;
 
 }
 struct Persona* findBySurname(Database * database, char * surname){
 
+    if (database == NULL || surname == NULL) return NULL;
+
+    IndexNodeString *surnameIndex = database->surname;
+    while(surnameIndex != NULL){
+        int comparison = strcmp(surname, surnameIndex->value);
+        if (comparison == 0){
+            //?comparison   
+            return (struct Persona*) surnameIndex;
+        }
+        else if(comparison<0){
+            surnameIndex = surnameIndex->left;
+        }
+        else{
+            surnameIndex = surnameIndex->right;
+        }
+    }
+    //? persona not found
+    return NULL;
+
 }
 struct Persona* findByAddress(Database * database, char * address){
+
+
+    if (database == NULL || address == NULL) return NULL;
+
+    IndexNodeString *addressIndex = database->address;
+    while(addressIndex != NULL){
+        int comparison = strcmp(address, addressIndex->value);
+        if (comparison == 0){
+            //?comparison   
+            return (struct Persona*) addressIndex;
+        }
+        else if(comparison<0){
+            addressIndex = addressIndex->left;
+        }
+        else{
+            addressIndex = addressIndex->right;
+        }
+    }
+    //? persona not found
+    return NULL;
 
 }
 struct Persona* findByAge(Database * database, int age){
     
+    if (database == NULL || age == 0) return NULL;
+
+    IndexNodeInt *ageIndex = database->age;
+    while(ageIndex != NULL){
+        if (age == ageIndex->value){
+            //?comparison   
+            return (struct Persona*) ageIndex;
+        }
+        else if(age<ageIndex->value){
+            ageIndex = ageIndex->left;
+        }
+        else{
+            ageIndex = ageIndex->right;
+        }
+    }
+    //? persona not found
+    return NULL;
 }
